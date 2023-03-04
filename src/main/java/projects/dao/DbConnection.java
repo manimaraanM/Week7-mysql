@@ -2,6 +2,10 @@ package projects.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import projects.exception.DbException;
 
 public class DbConnection {
@@ -27,5 +31,19 @@ public class DbConnection {
 		
 		
 	}
+	
+	 public static Integer getLastInsertId(Connection conn, String table)
+		      throws SQLException {
+		    String sql = String.format("SELECT LAST_INSERT_ID() FROM %s", table);
+		    try (Statement stmt = conn.createStatement()) {
+				try (ResultSet rs = stmt.executeQuery(sql)) {
+			        if (rs.next()) {
+			        	return rs.getInt(1);
+			        }
+			        throw new SQLException(
+				            "Unable to retrieve the primary key value. No result set!");
+				      }
+				    }
+				  }
 
 }
