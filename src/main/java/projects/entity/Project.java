@@ -13,6 +13,10 @@ public class Project {
 	private int difficulty;
 	private String notes;
 	private List<material> material = new LinkedList<material>(); 
+	
+	
+
+
 	private List<step> step = new LinkedList<step>(); 
 	private List<category> category = new LinkedList<category>(); 
 	
@@ -24,24 +28,40 @@ public class Project {
 		sProject+="\n Materials:";
 		for(material m:material)
 		{
+			sProject+="\n";
 			sProject+=m;
 		}
 		
-		sProject+="\n Step:";
+		sProject+="\n Steps:";
 		for(step s:step)
 		{
+			sProject+="\n";
 			sProject+=s;
 		}
 		
 		sProject+="\n Categories:";
 		for(category c:category)
 		{
+			sProject+="\n";
 			sProject+=c;
 		}
 		
 		return sProject;
 	}
 	
+	public List<step> getStep() {
+		return step;
+	}
+
+
+	public List<category> getCategory() {
+		return category;
+	}
+
+
+	public List<material> getMaterial() {
+		return material;
+	}
 	
 	public int getProject_id() {
 		return project_id;

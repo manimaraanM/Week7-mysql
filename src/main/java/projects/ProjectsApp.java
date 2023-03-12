@@ -1,6 +1,7 @@
 package projects;
 
 import java.math.BigDecimal;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
@@ -15,11 +16,14 @@ public class ProjectsApp {
 	
 	//@formatter:off
 	private  List<String> operations= List.of(
-			"1. Add a project");
+			"1. Add a project",
+			"2. List project",
+			"3. Select a Project ");
 	//@formatter:on
 	
 	private Scanner scanner = new Scanner(System.in);
 	private ProjectService projectservice=new ProjectService();
+	private Project currProject = new Project();
 	
 
 	
@@ -41,6 +45,12 @@ public class ProjectsApp {
 				case 1:
 					createProject();
 					break;
+				case 2:
+					listProject();
+					break;
+				case 3:
+					selectProject();
+					break;
 				default:
 					System.out.println("\n" + selection + " is not a valid selection. Try again.");
 					break;
@@ -49,8 +59,39 @@ public class ProjectsApp {
 			}
 			catch(Exception e) {
 				System.out.println(e.toString());
+				e.printStackTrace();
 			}
 		}
+		
+	}
+
+	private void selectProject() {
+		// TODO Auto-generated method stub
+		currProject=null;
+		listProject();
+		int projectId=getIntInput("Please enter the project id you would like to view");
+		currProject=ProjectService.fetchProjectById(projectId);
+		
+		//Objects.isNull(currProject) ? System.out.println("Given project id is not available"):System.out.println(currProject);
+		
+		if(Objects.isNull(currProject)) {
+			System.out.println("Given project id is not available");
+		}
+		else
+		{
+			System.out.println("\n Select project details: \n" +currProject);
+		}
+		
+		
+	}
+
+	private void listProject() {
+		// TODO Auto-generated method stub
+List<Project> projectdisp=new LinkedList<>();
+projectdisp=ProjectService.fecthAllProjects();
+System.out.println("\n Projects: ");
+projectdisp.forEach(projectdisplay->System.out.println(projectdisplay.getProject_id() 
+		+" : " +projectdisplay.getProject_name()));
 		
 	}
 
@@ -70,7 +111,7 @@ public class ProjectsApp {
 		project.setNotes(notes);
 		
 		Project dbProject= ProjectService.addProject(project);
-		System.out.println("You have succesfully created project: " +dbProject);
+		System.out.println("You have succesfully created project" +dbProject);
 		
 		
 		
