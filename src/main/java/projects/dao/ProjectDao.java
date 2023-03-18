@@ -1,4 +1,5 @@
 package projects.dao;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,6 +25,76 @@ public class ProjectDao {
 		private static final String PROJECT_CATEGORY_TABLE="project_category";
 		private static final String STEP_TABLE="step";
 		
+		
+		public static boolean deleteProject(Integer project_id) {
+			// TODO Auto-generated method stub
+			String s="DELETE FROM " +PROJECT_TABLE +" where project_id=?";
+			try(Connection conn=DbConnection.getConnection()){
+				conn.setAutoCommit(false);
+				try(PreparedStatement ps=conn.prepareStatement(s)){
+					ps.setInt(1, project_id);
+					ps.addBatch();
+					int[] res=ps.executeBatch();
+					boolean result=res[0]==1;
+				
+					conn.commit();
+					return result;
+					
+				}catch(Exception e) {
+					conn.rollback();
+					throw new DbException(e);
+				}
+				
+			}catch(Exception e) {
+				throw new DbException(e);
+			}
+			
+		}
+
+
+		public static boolean modifyProjectDetail(Project project) {
+			// TODO Auto-generated method stub
+			
+			String s="UPDATE " +PROJECT_TABLE 
+					+" set project_name = ?" +" ,"
+					+" estimated_hours =? " +" ,"
+					+" actual_hours=? ,"
+					+" difficulty=? ,"
+					+" notes=? "
+					+" where project_id=?";
+			
+			try(Connection conn=DbConnection.getConnection()){
+				conn.setAutoCommit(false);
+				try(PreparedStatement ps=conn.prepareStatement(s)){
+					
+					ps.setString(1, project.getProject_name());
+					ps.setObject(2,project.getEstimated_hours());
+					ps.setObject(3,project.getActual_hours());
+					ps.setInt(4, project.getDifficulty());
+					ps.setString(5, project.getNotes());
+					
+					ps.setInt(6, project.getProject_id());
+					
+					ps.addBatch();
+					int[] result=ps.executeBatch();
+					System.out.println("value is " +result[0]);
+					boolean res=result[0]==1;
+					
+					conn.commit();
+					return res;
+					
+				}catch(Exception e) {
+					conn.rollback();
+					throw new DbException(e);
+				}
+				
+			}catch(Exception e) {
+				throw new DbException(e);
+			}
+			
+			
+		}
+
 		
 		public static Optional<Project> fetchProjectById(int projectId) {
 			String s="SELECT * FROM " +PROJECT_TABLE +" where project_id=?";
@@ -286,6 +357,12 @@ public class ProjectDao {
 		}
 		
 	}
+
+
+	
+
+
+
 
 
 
